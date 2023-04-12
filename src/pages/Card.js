@@ -1,7 +1,42 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Master from '../layouts/Master'
 
 function Card({card,setCard}) {
+  // hook\
+
+  // const [total,setTotal] = useState(0)
+  var total = 0
+
+  useEffect(()=>{
+    card.map((d)=> {
+      total += d.price * d.qty
+    })
+  })
+
+  // logic code
+  const renderReduce = (product) => {
+    setCard(prevState => prevState.map((d) => {
+      if(d.id === product.id){
+        var updateQty = d.qty - 1
+        return {...d,qty : updateQty}
+      }else{
+        return d
+      }
+    }))
+    // setTotal(product.price *  product.qty)
+  }
+
+  const renderAdd = (product) => {
+    setCard(prevState => prevState.map((d) => {
+      if(d.id === product.id){
+        var updateQty = d.qty + 1
+        return {...d,qty : updateQty}
+      }else{
+        return d
+      }
+    }))
+  }
+
   return (
     <Master card={card} setCard={setCard}>
         <div>
@@ -14,29 +49,37 @@ function Card({card,setCard}) {
       <th scope="col">Title</th>
       <th scope="col">Price</th>
       <th scope="col">qty</th>
+      <th scope='col'>Total</th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
-    <tr>
-      <th scope="row">1</th>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
-    </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td>Jacob</td>
-      <td>Thornton</td>
-      <td>@fat</td>
-    </tr>
-    <tr>
-      <th scope="row">3</th>
-      <td>Larry</td>
-      <td>the Bird</td>
-      <td>@twitter</td>
-    </tr>
+    {
+      card.map((d)=>{
+        return (
+          <tr key={d.id}>
+            <th scope="row">{d.id}</th>
+            <td>{d.title}</td>
+            <td>{d.price}</td>
+            <td>{d.qty}</td>
+            <td>{d.price * d.qty}</td>
+            <td>
+              <button onClick={() => renderReduce(d)} className='btn btn-sm btn-danger px-3'>-</button>
+              <button onClick={() => renderAdd(d)} className='btn btn-sm btn-danger px-3'>+</button>
+            </td>
+          </tr>
+        )
+      })
+    }
+    
   </tbody>
 </table>
+
+      <div className='card'>
+        <div className='card-body float-end text-white'>
+          <h4 className='text-white'>Total</h4>
+        </div>
+      </div>
           </div>
         </div>
     </Master>
